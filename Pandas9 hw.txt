@@ -1,0 +1,87 @@
+Pandas9
+
+1 Problem 1 : Game Play Analysis I 
+
+
+sol 1:
+
+import pandas as pd
+
+def game_analysis(activity: pd.DataFrame) -> pd.DataFrame:
+        return activity.groupby(["player_id"])["event_date"].min().reset_index().rename(columns={'event_date':'first_login'})
+
+
+
+sol 2:
+
+import pandas as pd
+
+def game_analysis(activity: pd.DataFrame) -> pd.DataFrame:
+
+        df= activity.groupby(["player_id"])["event_date"].min().reset_index()
+        return df.rename(columns={'event_date':'first_login'})
+
+
+
+sol 3:
+
+import pandas as pd
+
+def game_analysis(activity: pd.DataFrame) -> pd.DataFrame:
+    
+        df = activity.sort_values(by='event_date')
+        df.drop_duplicates('player_id',inplace=True)
+        return df[['player_id','event_date']].rename(columns={'event_date' : 'first_login'})
+
+
+
+
+
+
+2 Problem 2 : Customers Placing the Largest Number of Orders 
+
+sol 1:
+
+import pandas as pd
+
+def largest_orders(orders: pd.DataFrame) -> pd.DataFrame:
+    df= orders.groupby(['customer_number']).size().reset_index(name='num')
+    df= df.sort_values(by='num', ascending=False)
+    return pd.DataFrame(df['customer_number'].head(1))
+
+
+
+
+sol 2:
+
+import pandas as pd
+
+def largest_orders(orders: pd.DataFrame) -> pd.DataFrame:
+    df= orders.groupby(['customer_number']).size().reset_index(name='num')
+    df= df.sort_values(by='num', ascending=False)
+    if len(df)==0:
+        return pd.DataFrame([],columns=['customer_number'])
+    return pd.DataFrame([df.iloc[0]['customer_number']]).rename(columns={0:'customer_number'})
+
+
+
+sol 3:
+
+import pandas as pd
+
+def largest_orders(orders: pd.DataFrame) -> pd.DataFrame:
+    df= orders.groupby(['customer_number']).size().reset_index(name='num')
+    df= df.sort_values(by='num', ascending=False)
+    return df[['customer_number']][0:1]
+
+
+
+
+sol 4:
+
+import pandas as pd
+
+def largest_orders(orders: pd.DataFrame) -> pd.DataFrame:
+    df= orders['customer_number'].mode()
+    return pd.DataFrame(df)
+
